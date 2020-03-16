@@ -4,5 +4,8 @@
   "days": ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"],
   "date": "01/03/2020",
   "soldierInLine": 1,
-  "commanderInLine": 0
+  "commanderInLine": 0,
+  "maxBorderSize": 1,
+  "max_range" :70,
+  "weekendDays": 3
 }

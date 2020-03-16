@@ -7,7 +7,7 @@ import json
 import win32com.client as win32
 import os
 
-max_range=71
+
 excelName="cleaningProject.xlsx"
 with open('soldier_file.json',encoding="utf-8") as jasonFolder:
     data=json.load(jasonFolder)
@@ -26,7 +26,9 @@ soldiers=data["soldiers"]
 Commanders=data["Commanders"]
 commanderInLine=data['commanderInLine']
 soldierInLine=data["soldierInLine"]
-
+maxBorderSize=data["maxBorderSize"]
+max_range=data["max_range"]
+weekendDays=data["weekendDays"]
 
 #getting the list location
 def gettingListLocation(listA ,elementA):
@@ -44,7 +46,7 @@ def AddingHeadLines(col = 0,row=0):
     settingBorder(col)
     for headLine in headLines:
         worksheet.write(col,row, headLine, headLineformat)
-        worksheet.write(col, row+len(headLines)+2, headLine, headLineformat)
+        worksheet.write(col, row+len(headLines)+maxBorderSize, headLine, headLineformat)
         row+=1
 
 #adding a border
@@ -52,29 +54,30 @@ def settingBorder(col):
         color = workbook.add_format()
         color.set_pattern(1)
         color.set_bg_color('white')
-        worksheet.write(col, len(headLines),"" ,color)
-        worksheet.write(col, len(headLines)+1, "", color)
+        for i in range(0,maxBorderSize, 1):
+          worksheet.write(col, len(headLines)+i,"" ,color)
+         # worksheet.write(col, len(headLines)+1, "", color)
 
 #adding a date to every section
 def setDate(col):
-       worksheet.write(col+ofSet, gettingListLocation(headLines, "תאריך") + len(headLines) + 2, date_object.date()+ timedelta(days=col-1), date_format)
+       worksheet.write(col+ofSet, gettingListLocation(headLines, "תאריך") + len(headLines) + maxBorderSize, date_object.date()+ timedelta(days=col-1), date_format)
        worksheet.write(col+ofSet, gettingListLocation(headLines,"תאריך"), date_object.date()+ timedelta(days=col-1+max_range-1), date_format)
 
 #setting the day Itself
 def setDay(col,day):
-    worksheet.write(col+ofSet,len(headLines)+2+gettingListLocation(headLines,"יום") , days[day])
+    worksheet.write(col+ofSet,len(headLines)+maxBorderSize+gettingListLocation(headLines,"יום") , days[day])
     worksheet.write(col+ofSet, gettingListLocation(headLines, "יום"), days[day])
 
 #setting the soldiers in the rows
 def setSoldeir(col,sold,sold2):
-    worksheet.write(col + ofSet,len(headLines) + 2 + gettingListLocation(headLines, "תורן") , soldiers[sold])
+    worksheet.write(col + ofSet,len(headLines) + maxBorderSize + gettingListLocation(headLines, "תורן") , soldiers[sold])
     worksheet.write(col + ofSet,gettingListLocation(headLines,"תורן") , soldiers[sold2])
 
 #setting the commenders
-def setCommender(comm):
-    comm2=((comm+int(max_range/7))%3)
+def setCommender(comm,col):
+    comm2=((comm+int(max_range/len(days)))%3)
     comm=comm%3
-    worksheet.write(col+ofSet-3,gettingListLocation(headLines,"מפקד")+len(headLines)+2,Commanders[comm])
+    worksheet.write(col+ofSet-3,gettingListLocation(headLines,"מפקד")+len(headLines)+maxBorderSize,Commanders[comm])
     worksheet.write(col+ofSet-3,gettingListLocation(headLines,"מפקד"),Commanders[comm2])
 
 
@@ -82,25 +85,25 @@ def setCommender(comm):
 
 AddingHeadLines()
 ofSet=0  #this veriable is used to help sort the columns (every 7 days there is an ofset)
-for col in range(1,max_range,1):
+for col in range(1,max_range+1,1):
     setDate(col)
     settingBorder(col+ofSet)
-    day = (col - 1) % 7
+    day = (col - 1) % len(days)
     setDay(col,day)
-    if(day<4):
+    if(day<len(days)-weekendDays):
         sold=soldierInLine%len(soldiers)
-        sold2=(soldierInLine+max_range-int(max_range/7*3)-1)%len(soldiers) #the sum of the days between the sold1 to sold 2 and their their ofset
+        sold2=(soldierInLine+max_range-int(max_range/len(days)*3))%len(soldiers) #the sum of the days between the sold1 to sold 2 and their their ofset
         setSoldeir(col,sold,sold2)
         soldierInLine+=1
     if(day==6):
-        setCommender(commanderInLine)
+        setCommender(commanderInLine,col)
         commanderInLine+=1
-        if((col/7)!=((max_range-1)/7)):
+        if((col/len(days))!=((max_range)/len(days))):
              ofSet+=1
              AddingHeadLines(col+ofSet)
         else:
-            data['commander']=((commanderInLine + int(max_range / 7)) % 3)
-            data['soldeir']=(soldierInLine+max_range-int(max_range/7*2)-1)%len(soldiers)
+            data['commander']=((commanderInLine + int(max_range / len(days))) % len(Commanders))
+            data['soldeir']=(soldierInLine+max_range-int(max_range/len(days)*2))%len(soldiers)
             dateString=date_object.date()+ timedelta(days=col-1+50)
             data["date"]=dateString.strftime('%d/%m/%Y')
             print(data)
