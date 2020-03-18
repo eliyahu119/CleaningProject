@@ -2,11 +2,11 @@
   "soldiers": [ "אליהו", "קובי", "אשל", "עומר", "שקד", "יששכר", "טל", "גיא", "רועי", "רן", "אמיר כ", "עידו"],
   "Commanders": [ "רן", "יששכר", "קובי" ],
   "days": ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"],
-  "date": "01/03/2020",
+  "date": "22/03/2020",
   "soldierInLine": 1,
   "commanderInLine": 0,
   "maxBorderSize": 1,
-  "max_range" :40,
-  "weekendDays":1,
-  "numberOfBlocks": 4
+  "max_range" :70,
+  "weekendDays":3,
+  "numberOfBlocks": 5
 }

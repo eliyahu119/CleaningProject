@@ -28,8 +28,8 @@ commanderInLine = data['commanderInLine']
 soldierInLine = data["soldierInLine"]
 maxBorderSize = data["maxBorderSize"]
 max_range = data["max_range"]
-weekendDays = data["weekendDays"]
-numberOfBlocks=data["numberOfBlocks"]
+weekendDays = data["weekendDays"] % len(days)  # for when the weekend days are bigger then the week
+numberOfBlocks = data["numberOfBlocks"]
 
 
 # this variable is used to help sort the columns (every 7 days there is an of set)
@@ -73,23 +73,22 @@ def settingBorder(col, row):
     color.set_pattern(1)
     color.set_bg_color('white')
     for i in range(0, maxBorderSize, 1):
-        
         worksheet.write(col, len(headLines) + i + row, "", color)
         # worksheet.write(col, len(headLines)+1, "", color)
 
 
 # adding a date to every section
-def setDate(daysPassed,col, row=0):
+def setDate(daysPassed, col, row=0):
     # worksheet.write(col + ofSet, gettingListLocation(headLines, "תאריך") + len(headLines) + maxBorderSize,
     #               date_object.date() + timedelta(days=col - 1), date_format)
     worksheet.write(col, gettingListLocation(headLines, "תאריך") + row,
-                    date_object.date() + timedelta(days=daysPassed), date_format)
+                    date_object.date() + timedelta(days=daysPassed - 1),
+                    date_format)  # why the hell sunday is the last day in the calendar?
 
 
 # setting the day Itself
-def setDay( day,col=0, row=0):
+def setDay(day, col=0, row=0):
     # worksheet.write(col + ofSet, len(headLines) + maxBorderSize + gettingListLocation(headLines, "יום"), days[day])
-    d = days[day]
     worksheet.write(col, gettingListLocation(headLines, "יום") + row, days[day])
 
 
@@ -106,43 +105,49 @@ def setCommender(comm, col=0, row=0):
     # comm = comm % 3
     # worksheet.write(col + ofSet - 3, gettingListLocation(headLines, "מפקד") + len(headLines) + maxBorderSize,
     #                Commanders[comm])
-    worksheet.write(col , gettingListLocation(headLines, "מפקד") + row, Commanders[comm])
+    worksheet.write(col, gettingListLocation(headLines, "מפקד") + row, Commanders[comm])
 
 
-def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, daysPassed=0, ofsetDay=0):
+def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, days_passed=0):
     ofset = 0
-    commander_in_line = (commander_in_line + int(daysPassed / len(days)) % len(Commanders))
-    lined_soldier = (lined_soldier + daysPassed - (int(daysPassed / len(days)) * weekendDays)) % len(soldiers)
-    day_to_begin = daysPassed % len(days)
+    commander_in_line = (commander_in_line + int(days_passed / len(days)) % len(Commanders))
+    lined_soldier = (lined_soldier + days_passed - (int(days_passed / len(days)) * weekendDays)) % len(soldiers)
+    day_to_begin = days_passed % len(days)
     if day_to_begin != 0:
         ofset += 1
     for columns in range(day_to_begin, max_range, 1):
-        daysPassed+=1
+        days_passed += 1
         day = columns % len(days)
         if day == 0:
             AddingHeadLines(col=columns + ofset, row=row)
             if border:
-                settingBorder(col=columns + ofset,  row=row)
+                settingBorder(col=columns + ofset, row=row)
             ofset += 1
             setCommender(comm=commander_in_line, col=columns + ofset, row=row)
             commander_in_line += 1
             commander_in_line = commander_in_line % len(Commanders)
         if border:
             settingBorder(col=columns + ofset, row=row)
-        setDate(col=columns + ofset, row=row,daysPassed=daysPassed)
+        setDate(col=columns + ofset, row=row, daysPassed=days_passed)
         setDay(col=columns + ofset, day=day, row=row)
         if day < len(days) - weekendDays:
             sold = lined_soldier % len(soldiers)
-            # sold2 = (lined_soldier + max_range - int(max_range / len(days) * 3)) % len(
-            # soldiers)  # the sum of the days between the sold1 to sold 2 and their their ofset
-            setSoldeir(sold=sold,col=columns + ofset,  row=row)
+            setSoldeir(sold=sold, col=columns + ofset, row=row)
             lined_soldier += 1
-    return daysPassed
+    return days_passed
 
 
-daysPassed = 0
+def GetTheDayNow():
+    global date_object
+    weekdays = (date_object.weekday() + 1) % 7  # for some reason sunday is prefer to be the last day of the week.
+    date_object = date_object - timedelta(days=weekdays)
+    return weekdays  # because weekday starts with monday.
+
+
+# daysPassed=0
+daysPassed = GetTheDayNow()
 for i in range(0, numberOfBlocks, 1):
-     daysPassed = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine, commander_in_line=commanderInLine,daysPassed=daysPassed, border=False, )
+    daysPassed = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine,
+                                commander_in_line=commanderInLine, days_passed=daysPassed, border=False)
 workbook.close()
 adjustThecells()
-
