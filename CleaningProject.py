@@ -117,6 +117,7 @@ def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, day
     if day_to_begin != 0:
         ofset += 1
     for columns in range(day_to_begin, max_range, 1):
+        daysPassed+=1
         day = columns % len(days)
         if day == 0:
             AddingHeadLines(col=columns + ofset, row=row)
@@ -128,7 +129,7 @@ def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, day
             commander_in_line = commander_in_line % len(Commanders)
         if border:
             settingBorder(col=columns + ofset, row=row)
-        setDate(col=columns + ofset, row=row,daysPassed=daysPassed+columns)
+        setDate(col=columns + ofset, row=row,daysPassed=daysPassed)
         setDay(col=columns + ofset, day=day, row=row)
         if day < len(days) - weekendDays:
             sold = lined_soldier % len(soldiers)
@@ -136,14 +137,12 @@ def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, day
             # soldiers)  # the sum of the days between the sold1 to sold 2 and their their ofset
             setSoldeir(sold=sold,col=columns + ofset,  row=row)
             lined_soldier += 1
-    return max_range+daysPassed-day_to_begin
+    return daysPassed
 
 
 daysPassed = 0
 for i in range(0, numberOfBlocks, 1):
      daysPassed = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine, commander_in_line=commanderInLine,daysPassed=daysPassed, border=False, )
-# CreateTheExcel(columns, + len(headLines) + maxBorderSize,sold2,commanderInLin
-
 workbook.close()
 adjustThecells()
 

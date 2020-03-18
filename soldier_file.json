@@ -6,7 +6,7 @@
   "soldierInLine": 1,
   "commanderInLine": 0,
   "maxBorderSize": 1,
-  "max_range" :24,
+  "max_range" :40,
   "weekendDays":1,
   "numberOfBlocks": 4
 }
