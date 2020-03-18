@@ -89,7 +89,6 @@ def setDate(daysPassed,col, row=0):
 # setting the day Itself
 def setDay( day,col=0, row=0):
     # worksheet.write(col + ofSet, len(headLines) + maxBorderSize + gettingListLocation(headLines, "יום"), days[day])
-    d = days[day]
     worksheet.write(col, gettingListLocation(headLines, "יום") + row, days[day])
 
 
