@@ -73,6 +73,7 @@ def settingBorder(col, row):
     color.set_pattern(1)
     color.set_bg_color('white')
     for i in range(0, maxBorderSize, 1):
+        
         worksheet.write(col, len(headLines) + i + row, "", color)
         # worksheet.write(col, len(headLines)+1, "", color)
 
