@@ -16,7 +16,7 @@ worksheet.right_to_left()
 #####################################################################
 date_format = workbook.add_format({'num_format': 'dd/mm/yyyy', 'align': 'left'})
 date_string = data["date"]
-date_object = datetime.strptime(date_string, "%d/%m/%Y")
+date_object = datetime.strptime(date_string, "%y-%m-%d")
 
 ################################################################
 # lists
@@ -35,7 +35,7 @@ numberOfBlocks = data["numberOfBlocks"]
 # this variable is used to help sort the columns (every 7 days there is an of set)
 
 
-# add AutoFit to the cells
+# # add AutoFit to the cells
 def adjustThecells():
     path = os.path.abspath(
         excelName)  # for some reason (you can look it up on google excel.Workbooks.Open  function needs full path
