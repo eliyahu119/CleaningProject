@@ -16,7 +16,7 @@ worksheet.right_to_left()
 #####################################################################
 date_format = workbook.add_format({'num_format': 'dd/mm/yyyy', 'align': 'left'})
 date_string = data["date"]
-date_object = datetime.strptime(date_string, "%y-%m-%d")
+date_object = datetime.strptime(date_string, "%Y-%m-%d")
 
 ################################################################
 # lists
