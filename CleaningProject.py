@@ -6,11 +6,22 @@ from xlsxwriter.worksheet import Worksheet
 import json
 import win32com.client as win32
 import os
+from os import path
 
-excelName = "cleaningProject.xlsx"
+
+
+f = open(".LOCK", "x")
+f.close()
+excelName = "cleaningProject" 
+extention=".xlsx"
 with open('soldier_file.json', encoding="utf-8") as jasonFolder:
     data = json.load(jasonFolder)
-workbook = xlsxwriter.Workbook(excelName)
+numberOfexcels=1
+temp=excelName
+while path.exists(excelName+extention):
+    excelName=temp+str(numberOfexcels)
+    numberOfexcels+=1
+workbook = xlsxwriter.Workbook(excelName+extention)
 worksheet: Union[Worksheet, Any] = workbook.add_worksheet()
 worksheet.right_to_left()
 #####################################################################
@@ -151,3 +162,4 @@ for i in range(0, numberOfBlocks, 1):
                                 commander_in_line=commanderInLine, days_passed=daysPassed, border=False)
 workbook.close()
 adjustThecells()
+os.remove(".LOCK")
