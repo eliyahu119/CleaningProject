@@ -119,11 +119,11 @@ def setCommender(comm, col=0, row=0):
     worksheet.write(col, gettingListLocation(headLines, "מפקד") + row, Commanders[comm])
 
 
-def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, days_passed=0):
+def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, days_passed=0 ,startFromDay=0):
     ofset = 0
     commander_in_line = (commander_in_line + int(days_passed / len(days)) )% len(Commanders)
     lined_soldier = (lined_soldier + days_passed - (int(days_passed / len(days)) * weekendDays)) % len(soldiers)
-    day_to_begin = days_passed % len(days)
+    day_to_begin = (startFromDay+days_passed)% len(days)
     if day_to_begin != 0:
         ofset += 1
     for columns in range(day_to_begin, max_range, 1):
@@ -156,10 +156,11 @@ def GetTheDayNow():
 
 
 # daysPassed=0
-daysPassed = GetTheDayNow()
+daysPassed =0 
+startFromDay=GetTheDayNow()
 for i in range(0, numberOfBlocks, 1):
     daysPassed = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine,
-                                commander_in_line=commanderInLine, days_passed=daysPassed, border=False)
+                                commander_in_line=commanderInLine, days_passed=daysPassed, border=False,startFromDay=startFromDay)
 workbook.close()
 adjustThecells()
 os.remove(".LOCK")
