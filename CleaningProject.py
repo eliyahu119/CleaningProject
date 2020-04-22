@@ -12,7 +12,7 @@ from os import path
 
 f = open(".LOCK", "x")
 f.close()
-excelName = "cleaningProject" 
+excelName = ".//excelFolder//cleaningProject"
 extention=".xlsx"
 with open('soldier_file.json', encoding="utf-8") as jasonFolder:
     data = json.load(jasonFolder)
@@ -121,7 +121,7 @@ def setCommender(comm, col=0, row=0):
 
 def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, days_passed=0):
     ofset = 0
-    commander_in_line = (commander_in_line + int(days_passed / len(days)) % len(Commanders))
+    commander_in_line = (commander_in_line + int(days_passed / len(days)) )% len(Commanders)
     lined_soldier = (lined_soldier + days_passed - (int(days_passed / len(days)) * weekendDays)) % len(soldiers)
     day_to_begin = days_passed % len(days)
     if day_to_begin != 0:
