@@ -50,7 +50,8 @@ numberOfBlocks = data["numberOfBlocks"]
 def adjustThecells():
     path = os.path.abspath(
         excelName)  # for some reason (you can look it up on google excel.Workbooks.Open  function needs full path
-    excel = win32.gencache.EnsureDispatch('Excel.Application')
+    #excel = win32.gencache.EnsureDispatch('Excel.Application')
+    excel = win32.DispatchEx("Excel.Application")
     wb = excel.Workbooks.Open(path)
     ws = wb.Worksheets("Sheet1")
     ws.Columns.AutoFit()
@@ -123,7 +124,8 @@ def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, day
     ofset = 0
     commander_in_line = (commander_in_line + int(days_passed / len(days)) )% len(Commanders)
     lined_soldier = (lined_soldier + days_passed - (int(days_passed / len(days)) * weekendDays)) % len(soldiers)
-    day_to_begin = (startFromDay+days_passed)% len(days)
+    # day_to_begin = (startFromDay+days_passed)% len(days)
+    day_to_begin=startFromDay
     if day_to_begin != 0:
         ofset += 1
     for columns in range(day_to_begin, max_range, 1):
@@ -145,7 +147,7 @@ def CreateTheBlock(row=0, lined_soldier=0, commander_in_line=0, border=True, day
             sold = lined_soldier % len(soldiers)
             setSoldeir(sold=sold, col=columns + ofset, row=row)
             lined_soldier += 1
-    return days_passed
+    return days_passed,(columns+1)%len(days)
 
 
 def GetTheDayNow():
@@ -156,10 +158,10 @@ def GetTheDayNow():
 
 
 # daysPassed=0
-daysPassed =0 
 startFromDay=GetTheDayNow()
+daysPassed =startFromDay 
 for i in range(0, numberOfBlocks, 1):
-    daysPassed = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine,
+    daysPassed,startFromDay = CreateTheBlock(row=(len(headLines) + maxBorderSize) * i, lined_soldier=soldierInLine,
                                 commander_in_line=commanderInLine, days_passed=daysPassed, border=False,startFromDay=startFromDay)
 workbook.close()
 adjustThecells()

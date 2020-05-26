@@ -1,3 +1,27 @@
 *.xlsx
 .vscode/
 CleaningProject.py.rej
+CleaningProject.spec
+.idea/.gitignore
+.idea/cleaning duty Project.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.vs/slnx.sqlite
+.vs/slnx.sqlite-journal
+__pycache__/CleaningProject.cpython-38.pyc
+build/CleaningProject/Analysis-00.toc
+build/CleaningProject/base_library.zip
+build/CleaningProject/CleaningProject.exe.manifest
+build/CleaningProject/EXE-00.toc
+build/CleaningProject/PKG-00.pkg
+build/CleaningProject/PKG-00.toc
+build/CleaningProject/PYZ-00.pyz
+build/CleaningProject/PYZ-00.toc
+build/CleaningProject/Tree-00.toc
+build/CleaningProject/Tree-01.toc
+build/CleaningProject/warn-CleaningProject.txt
+build/CleaningProject/xref-CleaningProject.html
+dist/CleaningProject.exe
+dist/soldier_file.json
